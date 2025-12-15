@@ -1,0 +1,116 @@
+body{ /* Target the body and/or the main React root element */
+  height: device-height; /* Ensure the container takes up the full viewport height */
+  width: device-width; 
+  align-items: center;
+  margin: 0; /* Remove default browser margin on body */
+  background: linear-gradient(
+    135deg,
+    #ff8a00 0%,
+    #e52e71 50%,
+    #00bcd4 100%
+  );
+}
+
+
+.hero-container {
+  min-height: 100vh;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+  position: fixed; /* keep normal flow so centering works */
+}
+
+.hero-emoji {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+    transform: rotate(-45deg);
+    order: -1; /* Move emoji above title in flex container */
+    margin-top: 0.5rem; /* Optional: adjust spacing above emoji */
+}
+.hero-title {
+  font-size: 5rem;
+  font-weight: 800;
+  color: #1f1f1f;
+  text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.30);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-title:hover {
+  color: #1f1f1f;
+  text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.35);
+  transition: color 0.5s ease;
+  text-decoration: none; 
+}
+
+.hero-subtitle {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #3c03f5;
+    text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+    text-decoration-color: #242424;
+    margin-bottom: 0.25rem;
+}
+
+.hero-buttons {
+    display: flex;
+    margin-top: 2rem;
+    justify-content: center;
+    gap: 1rem;
+}
+.hero-loginbtn {
+    background-color: #000;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 1rem;
+}
+.hero-loginbtn:hover {
+    background-color: #333;
+}
+.hero-explorebtn {
+    background-color: #040100;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.hero-explorebtn:hover {
+    background-color: #333;
+}
+.hero-footer {
+    margin-top: auto;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #6c757d; /* Muted text */
+}
+.hero-footer-text {
+    margin: 0;
+    color: #6c757d; /* Muted text */
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.hero-footer-text:hover {
+    color: #343a40; /* Darker text on hover */
+    text-decoration: underline;
+}

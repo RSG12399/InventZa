@@ -1,0 +1,412 @@
+.explore-wrapper {
+          background-color: #f8f9fa; /* Light background for content sections */
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .explore-main-content {
+          flex-grow: 1; /* Allows main content to expand and push footer down */
+          max-width: 100%; /* Matches the width of the screenshot */
+          margin: 0 auto; /* Center content */
+          padding: 0 1rem; /* Horizontal padding */
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+          text-align: center;
+          padding: 4rem 0; /* Vertical padding */
+          background-color: #ffffff; /* White background for this section */
+          border-radius: 12px;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+          margin-bottom: 2rem; /* Space below hero */
+        }
+
+        .hero-title {
+          font-size: 3.5rem; /* Large, bold title */
+          font-weight: 800;
+          color: #212529; /* Dark text */
+          margin-bottom: 1rem;
+          line-height: 1.2;
+        }
+
+        .hero-subtitle {
+          font-size: 1.5rem;
+          color: #495057; /* Muted text */
+          margin-bottom: 6rem;
+          margin-top: 3.5rem;
+          max-width: 700px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .features-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid for features */
+          gap: 1.5rem;
+          max-width: 1000px; /* Limit width of grid */
+          margin: 0 auto;
+        }
+
+        .feature-card {
+          background-color: #ffffff;
+          padding: 2rem;
+          border-radius: 12px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+          text-align: center;
+          border: 1px solid #e9ecef;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon-wrapper {
+          width: 60px;
+          height: 60px;
+          background-color: #e0f2f7; /* Light blue background for icon */
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 1.5rem auto;
+        }
+
+        /* Lucide icons inherit color and size directly, but wrapper sets background */
+        /*.feature-icon-wrapper svg {
+          /* No direct styling here, color is passed as prop */
+        
+
+        .feature-card-title {
+          font-size: 1.3rem;
+          font-weight: 700;
+          color: #212529;
+          margin-bottom: 0.75rem;
+        }
+
+        .feature-card-description {
+          font-size: 0.95rem;
+          color: #6c757d;
+          line-height: 1.6;
+        }
+
+        /* --- Explore Categories Section --- */
+        .explore-section {
+          text-align: center;
+          padding: 4rem 0;
+          margin-bottom: 2rem;
+        }
+
+        .explore-title {
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: none;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: #212529;
+          margin-bottom: 1rem;
+        }
+
+        .explore-subtitle {
+          font-size: 1.2rem;
+          color: #495057;
+          margin-bottom: 3rem;
+          margin-top: 2rem;
+        }
+
+        .category-icons {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap; /* Allow wrapping */
+          gap: 2.5rem;
+        }
+
+        .category-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 110px; /* Fixed width for category item */
+           /* Fixed height */
+          min-height: 110px;
+          border-radius: 12px;
+          background-color: #ffffff;
+          border: 1px solid #e9ecef;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .category-item:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Lucide icons for categories */
+        .category-item svg {
+          margin-bottom: 0.5rem;
+        }
+
+        .category-item p {
+          font-size: 0.9rem;
+          color: #343a40;
+          font-weight: 600;
+        }
+
+        /* --- Call to Action (CTA) Section --- */
+        .cta-section {
+          background-color: #2563eb; /* Blue background */
+          color: #ffffff;
+          padding: 4rem 2rem;
+          text-align: center;
+          border-radius: 12px;
+          margin-bottom: 2rem; /* Space above footer */
+          box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); /* Blue shadow */
+        }
+
+        .cta-title {
+          font-size: 2.8rem;
+          font-weight: 700;
+          margin-bottom: 1.5rem;
+          line-height: 1.2;
+        }
+
+        .cta-description {
+          font-size: 1.2rem;
+          max-width: 800px;
+          margin: 0 auto 2.5rem auto;
+          line-height: 1.6;
+        }
+
+        .cta-button {
+          display: inline-block;
+          background-color: #ffffff; /* White button */
+          color: #2563eb; /* Blue text */
+          padding: 1rem 2.5rem;
+          border: none;
+          border-radius: 50px; /* Pill shape */
+          text-decoration: none;
+          font-size: 1.1rem;
+          font-weight: 700;
+          transition: all 0.3s ease;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+          background-color: #e2e6ea; /* Light gray on hover */
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- Landing Page Footer (for standalone preview) --- */
+        /* This footer is for the LandingPage.js standalone preview.
+           In your main App.js, the global footer will already be present,
+           so you would remove this section if integrating into App.js's main route. */
+        .landing-page-footer {
+          background-color: #212529; /* Dark footer background */
+          color: #adb5bd; /* Light gray text */
+          padding: 3rem 1rem;
+          font-size: 0.9rem;
+          border-top: 1px solid #343a40;
+        }
+
+        .footer-content {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Responsive columns */
+          gap: 2rem;
+          margin-bottom: 2rem;
+        }
+
+        .footer-brand-section {
+          text-align: left;
+        }
+
+        .footer-brand {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 0.5rem;
+        }
+
+        .footer-tagline {
+          color: #6c757d;
+        }
+
+        .footer-links-group h4 {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #ffffff;
+          margin-bottom: 1rem;
+        }
+
+        .footer-links-group ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .footer-links-group ul li {
+          margin-bottom: 0.5rem;
+        }
+
+        .footer-links-group ul li a {
+          color: #adb5bd;
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+
+        .footer-links-group ul li a:hover {
+          color: #2563eb; /* Blue on hover */
+        }
+
+        .social-icons {
+          display: flex;
+          gap: 1rem;
+          font-size: 1.5rem;
+        }
+
+        .social-icons a {
+          color: #adb5bd;
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+
+        .social-icons a:hover {
+          color: #2563eb;
+        }
+
+        .footer-copyright {
+          text-align: center;
+          border-top: 1px solid #343a40;
+          padding-top: 1.5rem;
+          margin-top: 1.5rem;
+          color: #6c757d;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 992px) {
+          .hero-title {
+            font-size: 3rem;
+          }
+          .hero-subtitle {
+            font-size: 1.3rem;
+          }
+          .explore-title {
+            font-size: 2rem;
+          }
+          .cta-title {
+            font-size: 2.2rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hero-title {
+            font-size: 2.5rem;
+          }
+          .hero-subtitle {
+            font-size: 1.1rem;
+          }
+          .features-grid {
+            grid-template-columns: 1fr; /* Single column on tablets/small screens */
+          }
+          .explore-title {
+            font-size: 1.8rem;
+          }
+          .explore-subtitle {
+            font-size: 1rem;
+          }
+          .category-icons {
+            gap: 1rem;
+          }
+          .category-item {
+            width: 90px;
+            height: 90px;
+            font-size: 2rem;
+          }
+          .category-item p {
+            font-size: 0.8rem;
+          }
+          .cta-title {
+            font-size: 1.8rem;
+          }
+          .cta-description {
+            font-size: 1rem;
+          }
+          .cta-button {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+          }
+          .footer-content {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust footer columns */
+          }
+        }
+
+        @media (max-width: 576px) {
+          .hero-section, .explore-section, .cta-section {
+            padding: 2.5rem 0;
+          }
+          .hero-title {
+            font-size: 2rem;
+          }
+          .hero-subtitle {
+            font-size: 1rem;
+          }
+          .feature-card {
+            padding: 1.5rem;
+          }
+          .feature-card-title {
+            font-size: 1.2rem;
+          }
+          .explore-title {
+            font-size: 1.5rem;
+          }
+          .category-icons {
+            justify-content: space-around; /* Distribute items more evenly */
+          }
+          .category-item {
+            width: 80px;
+            height: 80px;
+            font-size: 1.8rem;
+          }
+          .cta-title {
+            font-size: 1.5rem;
+          }
+          .cta-description {
+            font-size: 0.9rem;
+          }
+          .landing-page-footer {
+            padding: 2rem 1rem;
+          }
+          .footer-content {
+            grid-template-columns: 1fr; /* Stack footer sections */
+            text-align: center;
+          }
+          .footer-brand-section, .footer-links-group {
+            text-align: center;
+          }
+          .social-icons {
+            justify-content: center;
+          }
+        }
+.explore-cta-button {
+  display: inline-block;
+  background-color: #2563eb; /* Blue background */
+  color: #ffffff; /* White text */
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 50px; /* Pill shape */
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+.explore-cta-button:hover {
+  color: #ffffff;
+  background-color: #1e40af; /* Darker blue on hover */
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}

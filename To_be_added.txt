@@ -1,0 +1,457 @@
+import { getAppCheck, initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+
+import {app, db} from './AppFirebase';
+
+const Auth = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [legalName, setLegalName] = useState("");
+    const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+    const currentUser = useContext(AuthContext); // currentUser is the firebase.User or null
+    const {setGlobalLoading} = useContext(GlobalLoaderBoundary);
+
+    const signUp = async () => {
+        try {
+            const result = await createUserWithEmailAndPassword(auth, email, password);
+            user = setUser(result.user)
+            // You can read non-sensitive properties:
+            console.log("Signed up user email:", user.email);
+            console.log("Signed up user uid:", user.uid);
+            console.log("User signed up successfully:", user);
+        } catch (error) {
+            console.error("Error signing up!", error);
+        }
+    };
+
+    const logInWithGoogle = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = setUser(result.user)
+            console.log("Google sign-in successful:", user);
+            setGlobalLoading(true);
+            // credential retrieval may vary by SDK; result.credential is a safe check
+            const credential = result?.credential || null;
+            const token = credential?.accessToken;
+            if (token) console.log("Your Google access token:", token);
+        } catch (error) {
+            console.error("Error signing in with your Google account!", error);
+        }
+    };
+
+    const logInWithEmail = async () => {
+        try {
+            const result = await signInWithEmailAndPassword(auth, email, password);
+            console.log("Email sign-in successful:", result.user);
+        } catch (error) {
+            console.error("Error signing in with provided email and password!", error);
+        }
+    };
+
+    const logout = async () => {
+        try {
+            await auth.signOut();
+            console.log("User signed out successfully");
+        } catch (error) {
+            console.error("Error signing out!", error);
+            navigate('/signup');
+        }
+    };
+
+    useEffect(() => {
+        // page title
+        document.title = "Signup | InventZa";
+
+        // listen for auth state changes and navigate to dashboard when signed in
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("User signed in successfully:", user);
+                navigate('/dashboard');
+            } else {
+                console.log("No user signed in");
+                setGlobalLoading(false);
+                navigate('/signup');
+            }
+        });
+
+        return () => unsubscribe();
+    }, [navigate]);
+
+    // Example: somewhere in this component you can also check:
+    // console.log('Current user from context:', currentUser?.email, currentUser?.uid);
+    // NOTE: currentUser will be null before auth initialization completes.
+
+    return (
+        <Signup
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            legalName={legalName}
+            setLegalName={setLegalName}
+            signUp={signUp}
+            logInWithGoogle={logInWithGoogle}
+            logInWithEmail={logInWithEmail}
+            logout={logout}
+        />
+    );
+};
+
+// The signup page [without navigation] for preview purposes
+export function Signup({
+    email,
+    setEmail,
+    password,
+    setPassword,
+    legalName,
+    setLegalName,
+    signUp,
+    logInWithGoogle,
+    logInWithEmail
+}) {
+authentication & older app.jsx 👇🏻
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [newPostImage, setNewPostImage] = useState(null);
+  const [newPostCaption, setNewPostCaption] = useState('');
+  const [isSigningUp, setIsSigningUp] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Set up an auth state observer to track user login status
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      setIsLoading(false);
+
+      if (currentUser) {
+        // IMPORTANT: Use the global __app_id variable correctly.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const userDocRef = doc(db, `/artifacts/${appId}/users/${currentUser.uid}/profiles/user_data`);
+        const docUnsubscribe = onSnapshot(userDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          } else {
+            console.log("No such user data found, creating a new profile.");
+            setDoc(userDocRef, {
+              email: currentUser.email,
+              username: 'User' + currentUser.uid.substring(0, 5),
+              createdAt: new Date(),
+            });
+            setUserData({ email: currentUser.email, username: 'User' + currentUser.uid.substring(0, 5) });
+          }
+        }, (error) => {
+          console.error("Error reading to user document:", error);
+          setErrorMessage("Failed to fetch user data. Please try again.");
+        });
+
+        return () => {
+          docUnsubscribe();
+        };
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return unsubscribe;
+  }, [db]);
+
+  // Listen for posts from the public collection only when a user is logged in
+  useEffect(() => {
+    let unsubscribe;
+    if (user) {
+      // IMPORTANT: Use the global __app_id variable correctly.
+      const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+      const q = query(collection(db, `/artifacts/${appId}/public/data/posts`), orderBy('createdAt', 'desc'));
+      unsubscribe = onSnapshot(q, (snapshot) => {
+        const postsData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setPosts(postsData);
+      }, (error) => {
+        console.error("Error listening to posts:", error);
+      });
+    }
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, [db, user]);
+
+  // Handle user sign-up or login
+  const handleAuthAction = async (e) => {
+    e.preventDefault();
+    setErrorMessage('');
+    setIsLoading(true);
+
+    try {
+      if (isSigningUp) {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // IMPORTANT: Use the global __app_id variable correctly.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        await setDoc(doc(db, `/artifacts/${appId}/users/${user.uid}/profiles/user_data`), {
+          email: user.email,
+          username: username,
+          createdAt: new Date(),
+        });
+        console.log('User signed up and profile created successfully!');
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log('User signed in successfully!');
+      }
+    } catch (error) {
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          setErrorMessage('This email is already in use. Please log in instead.');
+          break;
+        case 'auth/invalid-email':
+          setErrorMessage('Please enter a valid email address.');
+          break;
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+          setErrorMessage('Invalid email or password.');
+          break;
+        case 'auth/weak-password':
+          setErrorMessage('Password should be at least 6 characters.');
+          break;
+        default:
+          setErrorMessage(`Authentication failed: ${error.message}`);
+          break;
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
+  const handleNewPost = async (e) => {
+    e.preventDefault();
+    if (!newPostImage || !user) {
+      setErrorMessage("An image file and a logged-in user are required to post.");
+      return;
+    }
+
+    try {
+      // IMPORTANT: Use the global __app_id variable correctly.
+      const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+      const imageRef = ref(storage, `/artifacts/${appId}/public/images/${user.uid}/${Date.now()}_${newPostImage.name}`);
+      await uploadBytes(imageRef, newPostImage);
+      const imageUrl = await getDownloadURL(imageRef);
+
+      await addDoc(collection(db, `/artifacts/${appId}/public/data/posts`), {
+        imageUrl: imageUrl,
+        caption: newPostCaption,
+        authorId: user.uid,
+        authorUsername: userData?.username || 'Anonymous',
+        createdAt: new Date(),
+      });
+      
+      setNewPostImage(null);
+      setNewPostCaption('');
+      setErrorMessage('');
+      console.log('Post added successfully!');
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      setErrorMessage("Failed to create post. Please try again.");
+    }
+  };
+
+  const Post = ({ post }) => {
+    const handleError = (e) => {
+      e.target.src = "https://placehold.co/600x400/e5e7eb/4b5563?text=Image+Not+Found";
+    };
+
+    return (
+      <div className="post-card">
+        <div className="post-header">
+          <span className="post-author">{post.authorUsername}</span>
+        </div>
+        <img
+          src={post.imageUrl}
+          alt={post.caption}
+          className="post-image"
+          onError={handleError}
+        />
+        <div className="post-content">
+          <p className="post-caption">
+            <span className="post-author-caption">{post.authorUsername}</span> {post.caption}
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      {isLoading ? (
+        <div className="spinner-container">
+          <p className="spinner-text">Loading...</p>
+        </div>
+      ) : (
+        <div className="app-container">
+          {user ? (
+            <div className="feed-container">
+              <div className="header-bar">
+                <span className="header-title">InstaClone</span>
+                <button
+                  onClick={handleSignOut}
+                  className="signout-button"
+                >
+                  Sign Out
+                </button>
+              </div>
+
+              <div className="new-post-form">
+                <h2>Create a new post</h2>
+                {errorMessage && (
+                  <p className="error-message">
+                    {errorMessage}
+                  </p>
+                )}
+                <form onSubmit={handleNewPost}>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <label className="label" htmlFor="newPostImage">
+                      Select an Image
+                    </label>
+                    <label className="file-input-wrapper">
+                      {newPostImage ? newPostImage.name : "Choose File"}
+                      <input
+                        id="newPostImage"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setNewPostImage(e.target.files[0])}
+                        className="file-input"
+                        required
+                      />
+                    </label>
+                  </div>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <label className="label" htmlFor="newPostCaption">
+                      Caption
+                    </label>
+                    <textarea
+                      id="newPostCaption"
+                      placeholder="Write a caption..."
+                      value={newPostCaption}
+                      onChange={(e) => setNewPostCaption(e.target.value)}
+                      className="input"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    className="button"
+                  >
+                    Post
+                  </button>
+                </form>
+              </div>
+
+              {posts.length > 0 ? (
+                posts.map(post => (
+                  <Post key={post.id} post={post} />
+                ))
+              ) : (
+                <p style={{ textAlign: 'center', color: '#8e8e8e' }}>No posts yet. Be the first to post!</p>
+              )}
+
+              <div className="user-details">
+                <h3>Your Account Details:</h3>
+                <p><strong>Username:</strong> {userData?.username || 'Loading...'}</p>
+                <p><strong>User ID:</strong> {user.uid}</p>
+                <p><strong>App ID:</strong> {__app_id}</p>
+              </div>
+              
+            </div>
+          ) : (
+            <div className="auth-card">
+              <h1 className="title">
+                {isSigningUp ? 'Sign Up to InventZa' : 'Log In to InventZa'}
+              </h1>
+              <form onSubmit={handleAuthAction}>
+                <div style={{ marginBottom: '1rem' }}>
+                  <label className="label" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="input"
+                    required
+                  />
+                </div>
+                {isSigningUp && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <label className="label" htmlFor="username">
+                      Username
+                    </label>
+                    <input
+                      id="username"
+                      type="text"
+                      placeholder="Choose a username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="input"
+                      required
+                    />
+                  </div>
+                )}
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <label className="label" htmlFor="password">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="input"
+                    required
+                  />
+                </div>
+                {errorMessage && (
+                  <p className="error-message">
+                    {errorMessage}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="button"
+                >
+                  {isSigningUp ? 'Sign Up' : 'Log In'}
+                </button>
+              </form>
+              <p className="toggle-text">
+                {isSigningUp ? "Already have an account?" : "Don't have an account?"}
+                <button
+                  onClick={() => setIsSigningUp(!isSigningUp)}
+                  className="toggle-button"
+                >
+                  {isSigningUp ? 'Log In' : 'Sign Up'}
+                </button>
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
